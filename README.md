@@ -1,45 +1,46 @@
-﻿# Learn STAAR — Texas Standardized Test Prep Guide
+﻿# Creative Learning Academy
 
-A plain-English map of exactly what's tested on the STAAR test — sourced from the official TEKS (Texas Essential Knowledge and Skills) standards behind it, so you know precisely what to study at every tested grade level, subject by subject.
+*(working title, subject to change)*
 
-## What STAAR actually tests
+## Contributors
 
-**STAAR** (State of Texas Assessments of Academic Readiness) is Texas's current standardized test, confirmed still in effect for the 2025-2026 school year. It does **not** test every subject at every grade — it covers a specific subset:
+- Greg Livingston
+- Derrick
 
-| Subject | Grades tested |
-|---|---|
-| Reading/Language Arts | 3, 4, 5, 6, 7, 8 |
-| Mathematics | 3, 4, 5, 6, 7, 8 |
-| Science | 5, 8 |
-| Social Studies | 8 |
+**Status: Concept & planning.** No app built yet.
 
-Plus five high school end-of-course (EOC) exams, taken whenever a student completes the course: **Algebra I**, **English I**, **English II**, **Biology**, and **U.S. History**.
+## What it is
 
-Everything in this guide is built around that list — no untested subjects, no untested grades. Every grade/course file below covers the full underlying TEKS content for that tested grade or course (since STAAR questions are drawn directly from TEKS), with a target marker on the specific grade or course that's actually assessed.
+A tablet learning app for students that feels like a game, not homework. Students pick their grade and work through short "trails" of activities across Math, Reading/ELA, and Science, earning progress along the way with a mascot guide — the exact look and feel will flex by age (younger grades lean more playful/game-like, high school leans more toward a clean, mature study-tool feel, but both stay standards-aligned underneath).
 
-## Subjects covered
+Starting scope: grades K–12, aligned to Texas TEKS standards, with every activity tagged to the skill it teaches and a parent/teacher view showing exactly what's covered.
 
-| Subject | File | TEA Chapter | STAAR-tested grades/courses |
-|---|---|---|---|
-| English Language Arts & Reading | [`english-language-arts.md`](english-language-arts.md) | 110 | 3-8, English I, English II |
-| Mathematics | [`mathematics.md`](mathematics.md) | 111 | 3-8, Algebra I |
-| Science | [`science.md`](science.md) | 112 | 5, 8, Biology |
-| Social Studies | [`social-studies.md`](social-studies.md) | 113 | 8, U.S. History |
+**Long-term goal: all states, not just Texas.** Content built around underlying skills (not Texas-specific codes) so it can map to other states' standards as we expand, instead of rebuilding per state.
 
-## How this was built
+## How it makes money
 
-Each file was researched directly from official TEA sources — the Texas Administrative Code (TAC) chapters that legally define TEKS — rather than from general knowledge or secondhand summaries. Where a file notes something as extrapolated rather than sourced directly, that's flagged explicitly rather than presented with false confidence. Non-tested grades are still included in each file (K-2, high school courses beyond the EOC courses, etc.) because they build the foundation the tested grades rely on, but the markers make it obvious at a glance what's actually on the test.
+**Parent subscription (first).** Free tier + paid tier, same model as ABCmouse/Khan Academy Kids/Prodigy. Also the legally cleanest option — COPPA bars targeted ads to kids under 13, so ad-supported isn't really viable here.
 
-## How to use this guide
+**School/district licensing (later, bigger).** Texas has a formal review process (IMRA) for state-approved instructional materials, which schools can then buy with state funding. Bigger payoff, slower process — pursue once the product's proven.
 
-Each subject file is organized grade-by-grade (or by course, for high school). Within each grade, content is grouped by strand, which is TEKS' own term for a major recurring topic category (e.g., Math has Number & Operations, Geometry & Measurement, Data Analysis, etc., every year, with increasing complexity).
+## Compliance to build around from day one
 
-Use it to:
-- See exactly what's fair game on a specific STAAR test before you sit for it
-- Build a study plan that targets the tested grade directly, with just enough of the surrounding grades' content to understand why a topic is tested the way it is
-- See how a subject builds on itself year over year -- every file ends with a "how this progresses" section showing the throughline, which is useful context even for non-tested grades
-- Look up a specific EOC course (Algebra I, English I/II, Biology, U.S. History) in full
+- **COPPA**: applies specifically to kids under 13 — verifiable parental consent, minimal data collection, documented retention/deletion, no targeted ads. Accounts belong to the parent, not the child for that age range.
+- **Older students (13–17)**: not covered by COPPA, but covered by broader Texas minor-protection laws (like the App Store Accountability Act and SCOPE Act) — different rules, not a free pass just because they're past the COPPA age.
+- **TEKS alignment**: mapped by strand/topic for now, across all grade bands (elementary, middle, high school); needs real review from a teacher/curriculum specialist before we claim certified alignment.
 
-## A note on scope
+## Roadmap
 
-This guide intentionally does not cover Fine Arts, Health, PE, Technology Applications, World Languages, or Career & Technical Education -- those are real, required or elective parts of the Texas curriculum, but none of them appear on STAAR. If the goal shifts from "prepare for STAAR" to "cover the complete K-12 curriculum," those subjects would need their own files.
+**Phase 1 — Prototype.** Working K–12 mockup, mock data, no real accounts.
+
+**Phase 2 — COPPA-compliant account model.** Parent-vs-child accounts, consent flow, minimal data.
+
+**Phase 3 — Launch in Texas.** Real accounts, real subscription billing.
+
+**Phase 4 — Texas IMRA state adoption.** Get approved for school/district purchasing.
+
+**Phase 5 — Expand state by state.** Map content to other states' standards.
+
+## Folder structure
+
+Not set up yet.
