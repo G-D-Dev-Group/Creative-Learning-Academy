@@ -1,5 +1,5 @@
 ﻿Creative Learning Academy
-(working title, subject to change)
+(we can change the name, this is just a placeholder)
 
 **Contributors**
 
@@ -98,3 +98,4 @@ See [`staar-guide/README.md`](staar-guide/README.md) for the full guide.
 
 * `staar-guide/`: STAAR/TEKS curriculum reference (README plus one file per tested subject)
 * Everything else: not set up yet.
+
