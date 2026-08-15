@@ -1,5 +1,4 @@
-﻿Creative Learning Academy
-(we can change the name, this is just a placeholder)
+﻿Creative Learning Academy (we can change the name, this is just a placeholder)
 
 **Contributors**
 
@@ -22,6 +21,23 @@
 * Parent subscription first. Free tier plus paid tier, same model as ABCmouse, Khan Academy Kids, and Prodigy.
 * Also the legally cleanest option: COPPA bars targeted ads to kids under 13, so ad supported isn't really viable.
 * School and district licensing comes later, bigger payoff. Texas has a review process (IMRA) for state approved instructional materials that schools buy with state funding. Slower process, pursue once the product is proven.
+
+**Revenue potential: what similar products actually make**
+
+* Duolingo is the clearest real number here since it's publicly traded and has to report earnings. Full year 2025 revenue was $1.04 billion, up about 39% from 2024's $748 million, with more than $1 billion in bookings and over 50 million daily active users. It's a language app, not the same product, but it shows the parent and consumer subscription model at this age range can scale into real money.
+* ABCmouse (made by Age of Learning), Prodigy Education, and IXL Learning are all privately held, so exact numbers aren't public. Third party estimates, not official figures, put ABCmouse around $108 million a year and Prodigy around $75 million a year. IXL is estimated much higher, into the hundreds of millions or more, though that number is the least reliable of the three since IXL doesn't disclose financials.
+* For pricing context: ABCmouse charges $14.99 a month, or $45 a year on the annual plan. Prodigy's paid tiers run roughly $5 to $10 a month depending on the plan and whether it's billed annually.
+
+What this could look like for us. Rough math using a $60 to $120 a year range per paying family, in line with what ABCmouse and Prodigy actually charge:
+
+* 1,000 paying families: $60,000 to $120,000 a year
+* 10,000 paying families: $600,000 to $1.2 million a year
+* 100,000 paying families: $6 million to $12 million a year, close to ABCmouse and Prodigy's actual scale today
+* 1,000,000 paying families: $60 million to $120 million a year, closer to Duolingo's range
+
+These are scenarios based on pricing math, not a forecast. Getting from zero users to even the 10,000 family mark takes real marketing, word of mouth, and probably school partnerships, and only a fraction of total app downloads ever convert from the free tier to a paying subscription. The school and district licensing path described above is a separate, likely larger revenue source once the product is proven, on top of whatever the parent subscription brings in.
+
+*Source: investors.duolingo.com official 2025 results, growjo.com estimates for ABCmouse/Age of Learning, Prodigy, and IXL Learning (private company estimates, not official filings), abcmouse.com and prodigygame.com for current pricing. Current as of August 2026.*
 
 **Government funding: SBIR grants**
 
@@ -49,7 +65,7 @@ Entity options:
 
 Operating agreement (if LLC): should cover ownership percentage, who contributed what, each person's role and decision making authority, how profits get handled, buyout terms if someone leaves, and an assignment clause so the code, name, and content legally belong to the LLC, not whoever personally made it. Get this right early.
 
-Branding: "Creative Learning Academy" is a working title, so confirm it's available as a domain, on app stores, and as a trademark before locking it in. Once a final name is picked: check it's not already trademarked for software or education services through the USPTO, check domain and app store availability, and register the trademark once the name and entity are both settled.
+Branding: the name is a placeholder for now, so confirm it's available as a domain, on app stores, and as a trademark before locking it in. Once a final name is picked: check it's not already trademarked for software or education services through the USPTO, check domain and app store availability, and register the trademark once the name and entity are both settled.
 
 **Compliance to build around from day one**
 
@@ -98,4 +114,3 @@ See [`staar-guide/README.md`](staar-guide/README.md) for the full guide.
 
 * `staar-guide/`: STAAR/TEKS curriculum reference (README plus one file per tested subject)
 * Everything else: not set up yet.
-
