@@ -28,6 +28,19 @@ School/district licensing (later, bigger). Texas has a formal review process (IM
 * Older students (13-17): not covered by COPPA, but covered by broader Texas minor-protection laws (like the App Store Accountability Act and SCOPE Act) -- different rules, not a free pass just because they're past the COPPA age.
 * TEKS alignment: mapped by strand/topic for now, across all grade bands (elementary, middle, high school); needs real review from a teacher/curriculum specialist before we claim certified alignment.
 
+**Placement test prep courses**
+
+Alongside the core grade-level curriculum, the app should offer placement test prep tracks for every grade level -- short, focused courses aimed at the tests families actually use to move a student between tracks: gifted & talented screening, magnet/charter school entrance exams, AP or dual-credit qualifying exams, grade-skipping/acceleration assessments, and district-run math or reading placement tests that route students into honors, advanced, or remedial tracks. These are a different category from the STAAR-aligned core content -- they're optional, higher-stakes, and only relevant to families actively trying to test into something.
+
+**Note to self -- school district guidelines vary**
+
+TEKS and STAAR are the statewide floor, but individual school districts layer their own requirements on top, and those requirements are not uniform: different pacing guides, additional local benchmark assessments, different qualifying scores or processes for gifted & talented and advanced placement, and district-specific report card standards. Placement test content especially cannot be treated as one-size-fits-all across Texas.
+
+Before actually developing the placement test prep courses:
+* Research how placement tests and cutoffs vary across a handful of large Texas districts first (e.g., Houston ISD, Dallas ISD, Austin ISD, Fort Worth ISD) to gauge how much they diverge from each other and from any state baseline.
+* Decide on a content model -- one universal placement-prep track with district-specific overlays/notes, versus fully separate per-district tracks -- before building it out, since this affects the data structure from the start.
+* Don't market or label any placement content as matching a specific district's test until that's been verified against that district's actual guidelines.
+
 **Roadmap**
 
 Phase 1 -- Prototype. Working K-12 mockup, mock data, no real accounts.
