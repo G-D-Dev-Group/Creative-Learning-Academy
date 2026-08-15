@@ -51,6 +51,20 @@ Phase 3: Launch in Texas. Real accounts, real subscription billing, app and webs
 Phase 4: Texas IMRA state adoption. Get approved for school and district purchasing.
 Phase 5: Expand state by state. Map content to other states' standards.
 
+**Build phases: iOS, Android, and website**
+
+Trying to build all three platforms at the same time from day one isn't realistic. This is the order to actually build them in, and it runs alongside the roadmap above rather than replacing it.
+
+Build phase 1: Core content and prototype. Get the actual lessons, activities, and grading logic working in one place first, before worrying about which platform it runs on. This is the same as Roadmap Phase 1.
+
+Build phase 2: iOS app. Build and test the real app on iOS first.
+
+Build phase 3: Android app. Port the same app and content over to Android once iOS is stable and working.
+
+Build phase 4: Website. Build the parent and teacher facing website on top of the same backend and content used by the two apps, so everything stays in sync.
+
+Build phase 5: All three live together. iOS app, Android app, and website all launched at once, all synced to the same accounts and progress data, with a polish pass across all three before wider release.
+
 **Curriculum reference: STAAR study guide**
 
 Before building Phase 1 content, `staar-guide/` holds a full breakdown of exactly what's tested on the STAAR test, Texas's current standardized test, sourced from the official TEKS standards behind it. It's organized grade by grade and subject by subject, with the tested grades and courses called out. It covers Reading/Language Arts, Math, Science, and Social Studies, plus the five high school end of course exams: Algebra I, English I, English II, Biology, and U.S. History. This is what Phase 1's content map should get built against, so activities line up with what students are actually accountable for.
