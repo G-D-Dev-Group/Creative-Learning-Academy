@@ -37,7 +37,7 @@
 
 **Legal setup: ownership, entity, and branding (Greg and Derrick, this is on us)**
 
-Not built yet. Needs a real conversation, plus probably a lawyer.
+Not built yet. Needs a real conversation between us.
 
 50/50 split:
 * Even split is simple to agree to, but neither person can outvote the other. Decide now: how ties get broken, what happens if one person stops contributing, whether ownership vests over time, and who owns the code, name, and design already created.
@@ -45,13 +45,11 @@ Not built yet. Needs a real conversation, plus probably a lawyer.
 Entity options:
 * DBA (assumed name): registers a business name with the county clerk. No legal entity, no liability protection. Two people running a business without a real entity default to a general partnership, personally on the hook for each other's actions. Cheapest and fastest, probably not right long term for two owners.
 * LLC: the standard choice here. Protects personal assets, can be owned 50/50 with the split defined in an operating agreement. Texas filing fee is $300 through the Secretary of State. Annual Franchise Tax Report and Public Information Report due May 15 through the Comptroller. Revenue under about $2.47 million owes no tax but still must file "No Tax Due."
-* Trust: normally for holding and passing on assets, like estate planning, not for running a two person business day to day. Worth asking a lawyer if it fits for something specific, like holding IP later. LLC is almost certainly the right tool for the business itself.
+* Trust: normally for holding and passing on assets, like estate planning, not for running a two person business day to day. Might fit for something specific, like holding IP later, but for running the business itself, an LLC is almost certainly the right tool.
 
 Operating agreement (if LLC): should cover ownership percentage, who contributed what, each person's role and decision making authority, how profits get handled, buyout terms if someone leaves, and an assignment clause so the code, name, and content legally belong to the LLC, not whoever personally made it. Get this right early.
 
 Branding: "Creative Learning Academy" is a working title, so confirm it's available as a domain, on app stores, and as a trademark before locking it in. Once a final name is picked: check it's not already trademarked for software or education services through the USPTO, check domain and app store availability, and register the trademark once the name and entity are both settled.
-
-Not legal advice, just a map of what to figure out. A real business or startup attorney, often a flat fee for LLC formation plus an operating agreement, is worth it here.
 
 **Compliance to build around from day one**
 
