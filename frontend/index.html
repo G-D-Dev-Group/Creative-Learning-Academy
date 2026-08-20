@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creative Learning Academy — Prototype</title>
+<style>
+  :root {
+    --page: #f6f7fb;
+    --card: #ffffff;
+    --text-primary: #1c2333;
+    --text-secondary: #4b5468;
+    --text-muted: #8891a5;
+    --border: #e3e6ef;
+    --accent: #6c5ce7;
+    --accent-2: #00b894;
+    --accent-3: #fdcb6e;
+    --good: #00b894;
+    --good-text: #067a5f;
+    --critical: #ff6b6b;
+    --radius: 16px;
+    --shadow: 0 2px 10px rgba(30, 35, 60, 0.06);
+    --shadow-lg: 0 10px 30px rgba(30, 35, 60, 0.12);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Nunito", "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: var(--page);
+    color: var(--text-primary);
+    min-height: 100vh;
+  }
+
+  /* ============ Age-band theming ============
+     Every screen reuses the same components; only these custom properties
+     and a few band-scoped rules change -- so K-2 stays playful, 9-12 goes
+     clean and mature, without forking the markup or logic. */
+  body[data-band="k2"] {
+    --radius: 26px;
+    --accent: #7c5cff;
+    --accent-2: #00c2a8;
+    --accent-3: #ffb238;
+    font-size: 17px;
+  }
+  body[data-band="k2"] .mascot { font-size: 52px; }
+  body[data-band="k2"] .app-title { font-family: "Baloo 2", "Nunito", sans-serif; }
+
+  body[data-band="35"] {
+    --radius: 18px;
+    --accent: #6c5ce7;
+    --accent-2: #00b894;
+    --accent-3: #fdcb6e;
+  }
+  body[data-band="35"] .mascot { font-size: 42px; }
+
+  body[data-band="68"] {
+    --radius: 12px;
+    --accent: #4a63e7;
+    --accent-2: #17a589;
+    --accent-3: #e0a129;
+    --page: #f4f5f9;
+  }
+  body[data-band="68"] .mascot { font-size: 32px; }
+
+  body[data-band="912"] {
+    --radius: 8px;
+    --page: #f2f3f6;
+    --card: #ffffff;
+    --accent: #2f3b8f;
+    --accent-2: #0e8f7a;
+    --accent-3: #c98a1a;
+    --text-primary: #171b2b;
+  }
+  body[data-band="912"] .mascot { font-size: 24px; }
+  body[data-band="912"] .app-shell { max-width: 960px; }
+
+  a { color: inherit; }
+
+  .app-shell { max-width: 1080px; margin: 0 auto; padding: 20px 20px 60px; }
+
+  /* ---------- Header ---------- */
+  .app-header {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 14px; margin-bottom: 22px; flex-wrap: wrap;
+  }
+  .app-brand { display: flex; align-items: center; gap: 10px; }
+  .app-brand .logo {
+    width: 38px; height: 38px; border-radius: 12px; background: var(--accent);
+    display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff;
+  }
+  .app-title { font-size: 19px; font-weight: 800; letter-spacing: -0.01em; }
+  .app-tagline { font-size: 12px; color: var(--text-muted); margin-top: -2px; }
+
+  .header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .btn {
+    border: 1px solid var(--border); background: var(--card); color: var(--text-primary);
+    border-radius: 999px; padding: 9px 16px; font-size: 13px; font-weight: 700; cursor: pointer;
+    font-family: inherit; transition: transform .08s ease, box-shadow .15s ease;
+  }
+  .btn:hover { box-shadow: var(--shadow); }
+  .btn:active { transform: scale(.97); }
+  .btn-accent { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn-ghost { background: transparent; border-color: transparent; color: var(--text-secondary); }
+  .btn-sm { padding: 6px 12px; font-size: 12px; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+
+  .prototype-banner {
+    background: color-mix(in srgb, var(--accent-3) 20%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent-3) 45%, transparent);
+    color: #7a5300; border-radius: 12px; padding: 8px 14px; font-size: 12px;
+    margin-bottom: 18px; display: flex; align-items: center; gap: 8px;
+  }
+
+  /* ---------- Views ---------- */
+  .view { display: none; }
+  .view.active { display: block; animation: fadeIn .18s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+  .mascot-row {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 20px;
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px 18px; box-shadow: var(--shadow);
+  }
+  .mascot { flex: none; line-height: 1; }
+  .mascot-bubble { font-size: 14.5px; line-height: 1.5; color: var(--text-secondary); }
+  .mascot-bubble b { color: var(--text-primary); }
+
+  /* ---------- Grade picker ---------- */
+  .grade-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px;
+  }
+  .grade-tile {
+    background: var(--card); border: 2px solid var(--border); border-radius: var(--radius);
+    padding: 18px 10px; text-align: center; cursor: pointer; font-family: inherit;
+    transition: transform .1s ease, border-color .15s ease, box-shadow .15s ease;
+  }
+  .grade-tile:hover { border-color: var(--accent); box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+  .grade-tile .g-label { font-size: 22px; font-weight: 800; color: var(--accent); }
+  .grade-tile .g-name { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+
+  /* ---------- Grade home: subject cards ---------- */
+  .grade-home-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+  .grade-home-head h2 { margin: 0; font-size: 22px; }
+
+  .subject-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .subject-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px; cursor: pointer; box-shadow: var(--shadow); transition: transform .12s ease, box-shadow .15s ease;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .subject-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+  .subject-card .s-icon { font-size: 34px; }
+  .subject-card .s-name { font-size: 17px; font-weight: 800; }
+  .subject-card .s-desc { font-size: 12.5px; color: var(--text-muted); line-height: 1.4; }
+  .subject-progress { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+  .subject-progress .bar { flex: 1; height: 8px; border-radius: 99px; background: var(--border); overflow: hidden; }
+  .subject-progress .bar > div { height: 100%; border-radius: 99px; background: var(--accent-2); }
+  .subject-progress .pct { font-size: 11.5px; font-weight: 700; color: var(--text-muted); min-width: 32px; text-align: right; }
+
+  /* ---------- Trail view ---------- */
+  .trail-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
+  .trail-head h2 { margin: 0; font-size: 20px; }
+  .trail-path { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 0 20px; }
+  .trail-node-wrap { display: flex; align-items: center; gap: 12px; width: 100%; max-width: 480px; }
+  .trail-node-wrap:nth-child(even) { flex-direction: row-reverse; }
+  .trail-node {
+    width: 74px; height: 74px; border-radius: 50%; border: none; cursor: pointer; flex: none;
+    display: flex; align-items: center; justify-content: center; font-size: 26px; font-family: inherit;
+    box-shadow: var(--shadow-lg); position: relative; transition: transform .1s ease;
+  }
+  .trail-node:hover:not(:disabled) { transform: scale(1.06); }
+  .trail-node:disabled { cursor: not-allowed; }
+  .trail-node.done { background: var(--accent-2); color: #fff; }
+  .trail-node.current { background: var(--accent); color: #fff; box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 22%, transparent), var(--shadow-lg); }
+  .trail-node.locked { background: var(--border); color: var(--text-muted); }
+  .trail-node .tn-check { position: absolute; bottom: -4px; right: -4px; background: #fff; border-radius: 50%; font-size: 14px; }
+  .trail-node-info { flex: 1; min-width: 0; }
+  .trail-node-info .tn-skill { font-size: 13.5px; font-weight: 700; }
+  .trail-node-info .tn-strand { font-size: 11.5px; color: var(--text-muted); }
+  .trail-connector { width: 3px; height: 22px; background: var(--border); border-radius: 3px; }
+
+  /* ---------- Activity / question screen ---------- */
+  .activity-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 26px; box-shadow: var(--shadow); max-width: 620px; margin: 0 auto;
+  }
+  .activity-skill-tag {
+    display: inline-block; font-size: 11px; font-weight: 700; color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 12%, transparent); padding: 4px 10px; border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  .activity-prompt { font-size: 18px; font-weight: 700; line-height: 1.5; margin-bottom: 20px; }
+  .activity-choices { display: flex; flex-direction: column; gap: 10px; }
+  .choice-btn {
+    text-align: left; padding: 13px 16px; border-radius: 12px; border: 2px solid var(--border);
+    background: var(--card); font-size: 14.5px; font-family: inherit; cursor: pointer; color: var(--text-primary);
+    transition: border-color .12s ease, background .12s ease;
+  }
+  .choice-btn:hover:not(:disabled) { border-color: var(--accent); }
+  .choice-btn.correct { border-color: var(--good); background: color-mix(in srgb, var(--good) 14%, transparent); }
+  .choice-btn.incorrect { border-color: var(--critical); background: color-mix(in srgb, var(--critical) 12%, transparent); }
+  .choice-btn:disabled { cursor: default; }
+
+  .activity-feedback { margin-top: 18px; padding: 14px 16px; border-radius: 12px; font-size: 13.5px; line-height: 1.5; display: none; }
+  .activity-feedback.show { display: block; }
+  .activity-feedback.correct { background: color-mix(in srgb, var(--good) 14%, transparent); color: var(--good-text); }
+  .activity-feedback.incorrect { background: color-mix(in srgb, var(--critical) 12%, transparent); color: #8a2e2e; }
+
+  .activity-actions { display: flex; justify-content: flex-end; margin-top: 20px; }
+
+  /* ---------- Parent/Teacher view ---------- */
+  .parent-head { margin-bottom: 16px; }
+  .parent-head h2 { margin: 0 0 4px; font-size: 21px; }
+  .parent-head p { margin: 0; font-size: 12.5px; color: var(--text-muted); max-width: 640px; line-height: 1.5; }
+  .parent-grade-select { margin: 14px 0 20px; }
+  .parent-grade-select select {
+    border: 1px solid var(--border); background: var(--card); color: var(--text-primary);
+    border-radius: 10px; padding: 9px 12px; font-size: 13.5px; font-family: inherit;
+  }
+  .coverage-table { display: flex; flex-direction: column; gap: 18px; }
+  .coverage-subject { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; box-shadow: var(--shadow); }
+  .coverage-subject h3 { margin: 0 0 12px; font-size: 15.5px; display: flex; align-items: center; gap: 8px; }
+  .coverage-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid var(--border); font-size: 12.5px; }
+  .coverage-row:first-of-type { border-top: none; }
+  .coverage-row .cr-skill { flex: 1; min-width: 0; }
+  .coverage-row .cr-bar { width: 130px; height: 7px; border-radius: 99px; background: var(--border); overflow: hidden; flex: none; }
+  .coverage-row .cr-bar > div { height: 100%; border-radius: 99px; }
+  .coverage-row .cr-pct { width: 38px; text-align: right; font-weight: 700; color: var(--text-muted); flex: none; }
+
+  .parent-disclaimer {
+    font-size: 11px; color: var(--text-muted); background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 10px 14px; margin-top: 18px; line-height: 1.4;
+  }
+
+  @media (max-width: 640px) {
+    .app-shell { padding: 14px 14px 40px; }
+    .trail-node { width: 62px; height: 62px; font-size: 22px; }
+    .trail-node-wrap { flex-direction: column !important; align-items: flex-start; gap: 6px; }
+    .coverage-row .cr-bar { width: 80px; }
+  }
+</style>
+</head>
+<body data-band="k2">
+  <div class="app-shell">
+
+    <div class="prototype-banner">
+      🚧 <span><b>Phase 1 prototype</b> — mock data only, no real accounts, no progress is saved between visits.</span>
+    </div>
+
+    <header class="app-header">
+      <div class="app-brand">
+        <div class="logo">🎓</div>
+        <div>
+          <div class="app-title">Creative Learning Academy</div>
+          <div class="app-tagline">Learning that feels like a trail, not homework</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span id="header-grade-pill" class="btn btn-ghost btn-sm" style="display:none;"></span>
+        <button class="btn btn-sm" id="btn-change-grade" style="display:none;">Change grade</button>
+        <button class="btn btn-accent btn-sm" id="btn-parent-view">👪 Parent / Teacher View</button>
+      </div>
+    </header>
+
+    <!-- ============ View: Grade Picker ============ -->
+    <section id="view-picker" class="view active">
+      <div class="mascot-row">
+        <div class="mascot">🦊</div>
+        <div class="mascot-bubble" id="picker-mascot-text">
+          Hi, I'm <b>Scout</b>! Pick your grade and let's start a trail together.
+        </div>
+      </div>
+      <div class="grade-grid" id="grade-grid"></div>
+    </section>
+
+    <!-- ============ View: Grade Home (subject cards) ============ -->
+    <section id="view-grade-home" class="view">
+      <div class="mascot-row">
+        <div class="mascot" id="grade-home-mascot">🦊</div>
+        <div class="mascot-bubble" id="grade-home-mascot-text"></div>
+      </div>
+      <div class="grade-home-head">
+        <h2 id="grade-home-title"></h2>
+      </div>
+      <div class="subject-grid" id="subject-grid"></div>
+    </section>
+
+    <!-- ============ View: Subject Trail ============ -->
+    <section id="view-trail" class="view">
+      <div class="trail-head">
+        <button class="btn btn-sm" id="btn-back-to-grade-home">← Back</button>
+        <h2 id="trail-title"></h2>
+        <span></span>
+      </div>
+      <div class="mascot-row">
+        <div class="mascot">🦊</div>
+        <div class="mascot-bubble" id="trail-mascot-text"></div>
+      </div>
+      <div class="trail-path" id="trail-path"></div>
+    </section>
+
+    <!-- ============ View: Activity / Question ============ -->
+    <section id="view-activity" class="view">
+      <div class="trail-head">
+        <button class="btn btn-sm" id="btn-back-to-trail">← Back to trail</button>
+        <h2></h2>
+        <span></span>
+      </div>
+      <div class="activity-card">
+        <span class="activity-skill-tag" id="activity-skill-tag"></span>
+        <div class="activity-prompt" id="activity-prompt"></div>
+        <div class="activity-choices" id="activity-choices"></div>
+        <div class="activity-feedback" id="activity-feedback"></div>
+        <div class="activity-actions">
+          <button class="btn btn-accent" id="btn-activity-continue" disabled>Continue →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ View: Parent / Teacher ============ -->
+    <section id="view-parent" class="view">
+      <div class="trail-head">
+        <button class="btn btn-sm" id="btn-back-from-parent">← Back</button>
+        <h2>👪 Parent / Teacher View</h2>
+        <span></span>
+      </div>
+      <div class="parent-head">
+        <p>
+          A read-only look at skill coverage, mapped to Texas TEKS strands. In Phase 1 this is mock data —
+          Phase 2 adds real parent/child accounts and a COPPA-compliant consent flow before any of this is real.
+        </p>
+        <div class="parent-grade-select">
+          <label for="parent-grade-picker" style="font-size:12px; color:var(--text-muted); margin-right:6px;">Viewing:</label>
+          <select id="parent-grade-picker"></select>
+        </div>
+      </div>
+      <div class="coverage-table" id="coverage-table"></div>
+      <div class="parent-disclaimer">
+        Skill coverage shown here is simulated for this prototype. Real alignment claims require review by a
+        teacher or curriculum specialist before publishing to families or districts, per the project's own
+        TEKS-alignment note.
+      </div>
+    </section>
+
+  </div>
+
+<script>
+/* ==========================================================================
+   Creative Learning Academy -- Phase 1 prototype
+   Single-file, no build step, mock data only (per README Phase 1 scope:
+   "K through 12 mockup, mock data, no real accounts").
+   Content is grounded in the real TEKS/STAAR strand + skill names captured
+   in staar-guide/mathematics.md, english-language-arts.md, and science.md.
+   ========================================================================== */
+
+/* ---------- Grades & age bands ---------- */
+const GRADES = [
+  { id:"K",  label:"Kindergarten", short:"K",    band:"k2"  },
+  { id:"1",  label:"1st Grade",    short:"1st",  band:"k2"  },
+  { id:"2",  label:"2nd Grade",    short:"2nd",  band:"k2"  },
+  { id:"3",  label:"3rd Grade",    short:"3rd",  band:"35"  },
+  { id:"4",  label:"4th Grade",    short:"4th",  band:"35"  },
+  { id:"5",  label:"5th Grade",    short:"5th",  band:"35"  },
+  { id:"6",  label:"6th Grade",    short:"6th",  band:"68"  },
+  { id:"7",  label:"7th Grade",    short:"7th",  band:"68"  },
+  { id:"8",  label:"8th Grade",    short:"8th",  band:"68"  },
+  { id:"9",  label:"9th Grade",    short:"9th",  band:"912" },
+  { id:"10", label:"10th Grade",   short:"10th", band:"912" },
+  { id:"11", label:"11th Grade",   short:"11th", band:"912" },
+  { id:"12", label:"12th Grade",   short:"12th", band:"912" },
+];
+
+/* Starting scope is Math, Reading & ELA, Science -- per the README's product
+   vision text (Social Studies is deliberately out of Phase 1 scope). */
+const SUBJECTS = [
+  { id:"math",    name:"Math",           icon:"🔢", desc:"Numbers, patterns, and problem solving." },
+  { id:"ela",     name:"Reading & ELA",  icon:"📖", desc:"Reading, writing, and language skills." },
+  { id:"science", name:"Science",        icon:"🔬", desc:"Explore how the world works." },
+];
+
+/* High school grades map to real EOC course names per subject. */
+const COURSE_NAMES = {
+  "9":  { math:"Algebra I",   ela:"English I",   science:"Biology" },
+  "10": { math:"Geometry",    ela:"English II",  science:"Chemistry" },
+  "11": { math:"Algebra II",  ela:"English III", science:"Physics" },
+  "12": { math:"Precalculus", ela:"English IV",  science:"Environmental Systems" },
+};
+
+/* Which grades are actually STAAR-tested for each subject, per
+   staar-guide/README.md and each subject file's opening line. */
+const STAAR_TESTED = {
+  math:    ["3","4","5","6","7","8","9"],
+  ela:     ["3","4","5","6","7","8","9","10"],
+  science: ["5","8","9"],
+};
+
+/* ---------- Curriculum: trail nodes per grade + subject ----------
+   Each node is {strand, skill}, drawn directly from the real TEKS strand
+   and skill breakdowns in staar-guide/*.md. */
+const CURRICULUM = {
+  K: {
+    math: [
+      { strand:"Number & Operations", skill:"Count to 20 and build numbers to 10" },
+      { strand:"Addition & Subtraction", skill:"Join and separate groups with sums to 10" },
+      { strand:"Geometry & Measurement", skill:"Identify 2D shapes and 3D solids" },
+      { strand:"Data Analysis", skill:"Sort objects and read picture graphs" },
+      { strand:"Personal Financial Literacy", skill:"Wants vs. needs, where income comes from" },
+    ],
+    ela: [
+      { strand:"Foundational Skills", skill:"Rhyme, syllables, and sounding out CVC words" },
+      { strand:"Comprehension & Response", skill:"Make predictions with a grown-up's help" },
+      { strand:"Multiple Genres", skill:"Folktales, fables, and fairy tales" },
+      { strand:"Composition", skill:"Tell and draw a simple story" },
+    ],
+    science: [
+      { strand:"Scientific Practices", skill:"Ask questions and use simple tools" },
+      { strand:"Matter", skill:"Sort objects by shape, color, and texture" },
+      { strand:"Force, Motion & Energy", skill:"Explore motion, magnets, and light" },
+      { strand:"Earth & Space", skill:"Notice day/night and weather patterns" },
+      { strand:"Organisms", skill:"What plants and animals need to grow" },
+    ],
+  },
+  "1": {
+    math: [
+      { strand:"Number & Operations", skill:"Build numbers up to 120" },
+      { strand:"Addition & Subtraction", skill:"Add and subtract within 20" },
+      { strand:"Algebraic Reasoning", skill:"Skip-count by 2s, 5s, and 10s" },
+      { strand:"Geometry & Measurement", skill:"Classify shapes and tell time to the half hour" },
+      { strand:"Personal Financial Literacy", skill:"Spending vs. saving money" },
+    ],
+    ela: [
+      { strand:"Foundational Skills", skill:"Blends, digraphs, and 100+ sight words" },
+      { strand:"Comprehension", skill:"Ask questions before, during, and after reading" },
+      { strand:"Multiple Genres", skill:"Spot drama and persuasive writing" },
+      { strand:"Composition", skill:"Write a simple narrative or poem" },
+    ],
+    science: [
+      { strand:"Matter", skill:"Predict what happens when things heat or cool" },
+      { strand:"Force, Motion & Energy", skill:"How pushes and pulls change motion" },
+      { strand:"Earth & Space", skill:"Predict the seasons and conserve water" },
+      { strand:"Organisms", skill:"Living vs. nonliving, simple food chains" },
+    ],
+  },
+  "2": {
+    math: [
+      { strand:"Number & Operations", skill:"Build numbers up to 1,200 on a number line" },
+      { strand:"Fractions", skill:"Halves, fourths, and eighths" },
+      { strand:"Addition & Subtraction", skill:"Multi-step addition and subtraction to 1,000" },
+      { strand:"Geometry & Measurement", skill:"Find area with square units, tell time to the minute" },
+      { strand:"Personal Financial Literacy", skill:"Deposits, withdrawals, producers vs. consumers" },
+    ],
+    ela: [
+      { strand:"Foundational Skills", skill:"Multisyllable words and common prefixes" },
+      { strand:"Vocabulary", skill:"Context clues, synonyms, antonyms, and idioms" },
+      { strand:"Multiple Genres", skill:"Fact vs. opinion in digital texts" },
+      { strand:"Composition", skill:"Write an informational report" },
+    ],
+    science: [
+      { strand:"Matter", skill:"Solids vs. liquids, melting and freezing" },
+      { strand:"Force, Motion & Energy", skill:"Contact forces and sound as vibration" },
+      { strand:"Earth & Space", skill:"The Sun, the Moon, and erosion" },
+      { strand:"Organisms", skill:"Food chains, pollination, and metamorphosis" },
+    ],
+  },
+  "3": {
+    math: [
+      { strand:"Number & Operations", skill:"Place value to 100,000" },
+      { strand:"Fractions", skill:"Equivalent fractions with denominators 2, 3, 4, 6, 8" },
+      { strand:"Computation", skill:"Multiplication facts up to 10 x 10" },
+      { strand:"Geometry & Measurement", skill:"Classify quadrilaterals and find area" },
+      { strand:"Personal Financial Literacy", skill:"Labor, income, and scarcity" },
+    ],
+    ela: [
+      { strand:"Foundational Skills", skill:"Compound words and contractions" },
+      { strand:"Comprehension", skill:"Annotate when something doesn't make sense" },
+      { strand:"Multiple Genres", skill:"Legends, myths, and claims vs. facts" },
+      { strand:"Composition", skill:"Write an opinion essay" },
+      { strand:"Inquiry & Research", skill:"Paraphrasing without plagiarizing" },
+    ],
+    science: [
+      { strand:"Matter & Energy", skill:"States of matter and state changes" },
+      { strand:"Force, Motion & Energy", skill:"Magnetism, gravity, and forms of energy" },
+      { strand:"Earth & Space", skill:"Sun-Earth-Moon system and planet order" },
+      { strand:"Organisms", skill:"Migration, hibernation, and fossils as evidence" },
+    ],
+  },
+  "4": {
+    math: [
+      { strand:"Number & Operations", skill:"Place value to 1 billion and decimals to hundredths" },
+      { strand:"Fractions", skill:"Compare fractions with unlike denominators" },
+      { strand:"Computation", skill:"Standard algorithms for all four operations" },
+      { strand:"Geometry & Measurement", skill:"Measure angles with a protractor" },
+      { strand:"Personal Financial Literacy", skill:"Fixed vs. variable expenses and profit" },
+    ],
+    ela: [
+      { strand:"Vocabulary", skill:"Greek and Latin roots" },
+      { strand:"Multiple Genres", skill:"Tall tales and figurative language" },
+      { strand:"Author's Craft", skill:"Sound devices: alliteration and assonance" },
+      { strand:"Composition", skill:"Write an argumentative essay with facts" },
+      { strand:"Inquiry & Research", skill:"Build a bibliography" },
+    ],
+    science: [
+      { strand:"Matter & Energy", skill:"Density, mixtures, and conservation of matter" },
+      { strand:"Force, Motion & Energy", skill:"Conductors, insulators, and circuits" },
+      { strand:"Earth & Space", skill:"Predict Moon phases and the water cycle" },
+      { strand:"Organisms", skill:"Photosynthesis basics and food webs" },
+    ],
+  },
+  "5": {
+    math: [
+      { strand:"Number & Operations", skill:"Decimals to the thousandths place" },
+      { strand:"Computation", skill:"Multi-digit multiplication and division fluency" },
+      { strand:"Algebraic Reasoning", skill:"Order of operations and volume formulas" },
+      { strand:"Geometry & Measurement", skill:"Plot ordered pairs on a coordinate plane" },
+      { strand:"Personal Financial Literacy", skill:"Gross vs. net income and budgeting" },
+    ],
+    ela: [
+      { strand:"Vocabulary", skill:"Adages, puns, and root word families" },
+      { strand:"Multiple Genres", skill:"Compare themes and character conflict" },
+      { strand:"Author's Craft", skill:"Hyperbole and point of view" },
+      { strand:"Composition", skill:"Argumentative writing with claims and evidence" },
+    ],
+    science: [
+      { strand:"Matter & Energy", skill:"Solubility and conductivity" },
+      { strand:"Force, Motion & Energy", skill:"Equal and unequal forces, energy transformations" },
+      { strand:"Earth & Space", skill:"Earth's rotation and how sedimentary rock forms" },
+      { strand:"Organisms", skill:"Human impact on ecosystems" },
+    ],
+  },
+  "6": {
+    math: [
+      { strand:"Number & Operations", skill:"Operations with positive and negative numbers" },
+      { strand:"Proportionality", skill:"Ratios, rates, and percents" },
+      { strand:"Expressions & Equations", skill:"Write equivalent expressions" },
+      { strand:"Measurement & Data", skill:"Four-quadrant coordinate plane, mean and median" },
+      { strand:"Personal Financial Literacy", skill:"Checking accounts and credit history" },
+    ],
+    ela: [
+      { strand:"Vocabulary", skill:"Greek and Latin root study" },
+      { strand:"Multiple Genres", skill:"Informational text organization patterns" },
+      { strand:"Author's Craft", skill:"Point of view and rhetorical devices vs. fallacies" },
+      { strand:"Composition", skill:"Multi-paragraph essay with a clear thesis" },
+      { strand:"Inquiry & Research", skill:"Judge source credibility and bias" },
+    ],
+    science: [
+      { strand:"Matter & Energy", skill:"Pure substances, mixtures, and the periodic table" },
+      { strand:"Force, Motion & Energy", skill:"Net force and Newton's Third Law" },
+      { strand:"Earth & Space", skill:"Earth's revolution, seasons, and the rock cycle" },
+      { strand:"Organisms", skill:"Cell theory and organism relationships" },
+    ],
+  },
+  "7": {
+    math: [
+      { strand:"Proportionality", skill:"Constant rate of change and similarity" },
+      { strand:"Expressions & Equations", skill:"Two-step equations and inequalities" },
+      { strand:"Measurement & Data", skill:"Dot plots, box plots, and sampling" },
+      { strand:"Personal Financial Literacy", skill:"Simple vs. compound interest" },
+    ],
+    ela: [
+      { strand:"Multiple Genres", skill:"Foreshadowing and suspense in fantasy/sci-fi" },
+      { strand:"Author's Craft", skill:"Subjective vs. objective point of view" },
+      { strand:"Composition", skill:"Complex sentences with subordinating conjunctions" },
+      { strand:"Inquiry & Research", skill:"Refine research questions" },
+    ],
+    science: [
+      { strand:"Matter & Energy", skill:"Physical vs. chemical change" },
+      { strand:"Force, Motion & Energy", skill:"Speed vs. velocity, Newton's First Law" },
+      { strand:"Earth & Space", skill:"Evidence for plate tectonics" },
+      { strand:"Organisms", skill:"Energy flow through trophic levels" },
+    ],
+  },
+  "8": {
+    math: [
+      { strand:"Number & Operations", skill:"Real numbers, irrationals, and scientific notation" },
+      { strand:"Proportionality", skill:"Slope as a constant rate of change" },
+      { strand:"Expressions & Equations", skill:"Pythagorean Theorem and simultaneous equations" },
+      { strand:"2D Shapes", skill:"Transformations: rotation, reflection, translation" },
+      { strand:"Personal Financial Literacy", skill:"Compare loans and plan for college costs" },
+    ],
+    ela: [
+      { strand:"Multiple Genres", skill:"Non-linear plots: flashbacks and subplots" },
+      { strand:"Author's Craft", skill:"Extended metaphor, irony, and multiple points of view" },
+      { strand:"Composition", skill:"Active vs. passive voice" },
+      { strand:"Inquiry & Research", skill:"Spot bias by omission" },
+    ],
+    science: [
+      { strand:"Matter & Energy", skill:"Chemical reactions, acids and bases" },
+      { strand:"Force, Motion & Energy", skill:"Acceleration and Newton's Three Laws" },
+      { strand:"Earth & Space", skill:"Stellar life cycles and galaxy classification" },
+      { strand:"Organisms", skill:"Cell organelles, chromosomes, and inheritance" },
+    ],
+  },
+  "9": {
+    math: [
+      { strand:"Linear Functions", skill:"Linear equations, inequalities, and systems" },
+      { strand:"Quadratic Functions", skill:"Graph and factor quadratic functions" },
+      { strand:"Exponential Functions", skill:"Model growth and decay" },
+      { strand:"Polynomials", skill:"Exponent laws, radicals, and factoring" },
+    ],
+    ela: [
+      { strand:"Vocabulary", skill:"Denotative vs. connotative meaning" },
+      { strand:"Multiple Genres", skill:"Character foils and non-linear plots" },
+      { strand:"Author's Craft", skill:"Irony, understatement, and overstatement" },
+      { strand:"Composition", skill:"Argumentative and professional writing" },
+      { strand:"Inquiry & Research", skill:"Evaluate research credibility and bias" },
+    ],
+    science: [
+      { strand:"Cell Biology", skill:"Cell structure and biomolecules" },
+      { strand:"Genetics", skill:"DNA, meiosis, and Punnett squares" },
+      { strand:"Evolution", skill:"Evidence for natural selection" },
+      { strand:"Energy in Cells", skill:"Photosynthesis and respiration" },
+    ],
+  },
+  "10": {
+    math: [
+      { strand:"Coordinate Geometry", skill:"Transformational geometry on the coordinate plane" },
+      { strand:"Logical Argument", skill:"Formal constructions and proofs" },
+      { strand:"Similarity & Trig", skill:"Similar triangles and right-triangle trig" },
+      { strand:"Circles", skill:"Circle theorems, area, and volume" },
+    ],
+    ela: [
+      { strand:"Multiple Genres", skill:"Figurative meaning and cross-cultural themes" },
+      { strand:"Author's Craft", skill:"Rhetorical appeals, antithesis, and parallelism" },
+      { strand:"Composition", skill:"Analytical and argumentative writing" },
+      { strand:"Inquiry & Research", skill:"Spot hasty generalization and either-or fallacies" },
+    ],
+    science: [
+      { strand:"Atomic Theory", skill:"Electron configuration and periodic trends" },
+      { strand:"Bonding", skill:"Chemical bonding and nomenclature" },
+      { strand:"Stoichiometry", skill:"Moles and chemical calculations" },
+      { strand:"Acids & Bases", skill:"Properties of acids, bases, and solutions" },
+    ],
+  },
+  "11": {
+    math: [
+      { strand:"Function Families", skill:"Square root, rational, exponential, and log functions" },
+      { strand:"Systems", skill:"Systems of equations including quadratics" },
+      { strand:"Complex Numbers", skill:"Polynomial factoring and rational expressions" },
+      { strand:"Modeling", skill:"Regression modeling from data" },
+    ],
+    ela: [
+      { strand:"Response Skills", skill:"Moral dilemmas and historical context" },
+      { strand:"Author's Craft", skill:"Paradox, satire, and allegory" },
+      { strand:"Composition", skill:"Literary and rhetorical analysis, resumes" },
+      { strand:"Inquiry & Research", skill:"Spot post hoc and circular reasoning" },
+    ],
+    science: [
+      { strand:"Kinematics", skill:"Motion and Newton's Laws" },
+      { strand:"Electricity", skill:"Circuits and Coulomb's Law" },
+      { strand:"Energy", skill:"Conservation of energy and momentum" },
+      { strand:"Waves", skill:"Wave behavior and the EM spectrum" },
+    ],
+  },
+  "12": {
+    math: [
+      { strand:"Functions", skill:"Function composition and inverses" },
+      { strand:"Conics & Parametrics", skill:"Parametric and polar equations, conic sections" },
+      { strand:"Trigonometry", skill:"Unit circle, Law of Sines and Cosines, vectors" },
+      { strand:"Series", skill:"Sequences, series, and the Binomial Theorem" },
+    ],
+    ela: [
+      { strand:"Response Skills", skill:"Evaluate and critique at an advanced level" },
+      { strand:"Composition", skill:"Classical rhetoric and argument formulation" },
+      { strand:"Author's Craft", skill:"Critique advanced literary devices" },
+      { strand:"Inquiry & Research", skill:"Spot straw man and false dilemma fallacies" },
+    ],
+    science: [
+      { strand:"Ecosystems", skill:"Biomes and sustainability" },
+      { strand:"Populations", skill:"Population dynamics" },
+      { strand:"Human Impact", skill:"Human impact and environmental policy" },
+    ],
+  },
+};
+
+/* ---------- One working sample question per age band, per subject ----------
+   Two variants each, cycled by node index, so every node in every trail is
+   a real interactive multiple-choice check -- not just a single demo node. */
+const QUESTION_BANK = {
+  math: [
+    [ // k2
+      { prompt:"Scout counts 4 apples, then finds 3 more. How many apples in all?", choices:["6","7","8","9"], correct:1, explain:"4 + 3 = 7. Counting on from the bigger number is a fast way to add!" },
+      { prompt:"There are 9 crayons. Scout gives away 4 crayons. How many crayons are left?", choices:["4","5","6","13"], correct:1, explain:"9 - 4 = 5. Subtraction means taking a group away." },
+    ],
+    [ // 3-5
+      { prompt:"What is 6 x 7?", choices:["36","42","48","54"], correct:1, explain:"6 groups of 7 is 42 -- knowing multiplication facts helps with fractions and area too." },
+      { prompt:"Which fraction is equivalent to 1/2?", choices:["2/4","1/3","3/8","2/5"], correct:0, explain:"2/4 simplifies to 1/2 -- the numerator and denominator are both doubled." },
+    ],
+    [ // 6-8
+      { prompt:"Solve for x: 2x + 3 = 11", choices:["3","4","5","7"], correct:1, explain:"Subtract 3 from both sides to get 2x = 8, then divide by 2: x = 4." },
+      { prompt:"A shirt costs $40 and is 25% off. What's the sale price?", choices:["$10","$25","$30","$35"], correct:2, explain:"25% of $40 is $10 off, so the sale price is $40 - $10 = $30." },
+    ],
+    [ // 9-12
+      { prompt:"What are the solutions to x² - 5x + 6 = 0?", choices:["x = 1, 6","x = 2, 3","x = -2, -3","x = 0, 5"], correct:1, explain:"Factor to (x-2)(x-3) = 0, so x = 2 or x = 3." },
+      { prompt:"What is sin(30°)?", choices:["1/2","√2/2","√3/2","1"], correct:0, explain:"On the unit circle, sin(30°) = 1/2 -- a value worth memorizing." },
+    ],
+  ],
+  ela: [
+    [
+      { prompt:"Which word rhymes with \"cat\"?", choices:["hat","dog","sun","fish"], correct:0, explain:"\"Hat\" and \"cat\" both end with the -at sound." },
+      { prompt:"A story about talking animals that teaches a lesson is called a ___.", choices:["fable","biography","recipe","weather report"], correct:0, explain:"Fables use animal characters to teach a moral lesson." },
+    ],
+    [
+      { prompt:"\"She ran like the wind\" is an example of a ___.", choices:["simile","onomatopoeia","alliteration","acronym"], correct:0, explain:"A simile compares two things using \"like\" or \"as.\"" },
+      { prompt:"Which sentence is an opinion, not a fact?", choices:["The book has 200 pages.","This is the best book ever written.","The author lives in Texas.","The book was published in 2020."], correct:1, explain:"\"Best book ever\" can't be proven true or false -- that makes it an opinion." },
+    ],
+    [
+      { prompt:"A story told through only one character's thoughts uses ___ point of view.", choices:["omniscient","limited","objective","second person"], correct:1, explain:"Limited point of view stays inside just one character's head." },
+      { prompt:"\"Everyone is buying this game, so you should too\" is an example of the ___ fallacy.", choices:["bandwagon","circular reasoning","false dilemma","hasty generalization"], correct:0, explain:"Bandwagon appeals argue something is right just because it's popular." },
+    ],
+    [
+      { prompt:"Placing two contrasting ideas in parallel grammatical structure is called ___.", choices:["antithesis","hyperbole","allegory","onomatopoeia"], correct:0, explain:"Antithesis pairs opposite ideas in a balanced sentence structure." },
+      { prompt:"Presenting only two options when more actually exist is the ___ fallacy.", choices:["false dilemma","straw man","red herring","appeal to authority"], correct:0, explain:"A false dilemma hides other real choices to force a pick between two." },
+    ],
+  ],
+  science: [
+    [
+      { prompt:"Which of these is a living thing?", choices:["a tree","a rock","a car","a cloud"], correct:0, explain:"Living things grow, need energy, and can reproduce -- trees do all three." },
+      { prompt:"What do plants need to grow?", choices:["sunlight, water, and soil","only darkness","candy","plastic"], correct:0, explain:"Plants use sunlight, water, and nutrients from soil to grow." },
+    ],
+    [
+      { prompt:"Water changing from a liquid to a gas is called ___.", choices:["evaporation","condensation","erosion","melting"], correct:0, explain:"Evaporation happens when liquid water heats up and becomes water vapor." },
+      { prompt:"Which shows a food chain in the right order?", choices:["Sun → grass → rabbit → fox","Fox → rabbit → grass → Sun","Rabbit → Sun → fox → grass","Grass → fox → Sun → rabbit"], correct:0, explain:"Energy flows from the Sun to plants, then to the animals that eat them." },
+    ],
+    [
+      { prompt:"An object at rest stays at rest unless acted on by an unbalanced force. This is Newton's ___ Law.", choices:["First","Second","Third","Zeroth"], correct:0, explain:"Newton's First Law is also called the law of inertia." },
+      { prompt:"A relationship where both organisms benefit is called ___.", choices:["mutualism","parasitism","competition","predation"], correct:0, explain:"In mutualism, like bees and flowers, both sides get something helpful." },
+    ],
+    [
+      { prompt:"Organisms with helpful traits are more likely to survive and reproduce -- this is called ___.", choices:["natural selection","mitosis","osmosis","photosynthesis"], correct:0, explain:"Natural selection is the engine behind evolution over generations." },
+      { prompt:"The number of protons in an atom determines its ___.", choices:["element identity","mass number","electron charge","isotope type"], correct:0, explain:"Protons define which element an atom is -- change the protons, change the element." },
+    ],
+  ],
+};
+const BAND_ORDER = ["k2","35","68","912"];
+
+/* ---------- App state (in-memory only -- Phase 1 has no real accounts) ---------- */
+const state = {
+  gradeId: null,
+  subjectId: null,
+  activeNodeIndex: null,
+  progress: {}, // "gradeId:subjectId" -> number of completed nodes
+};
+
+/* ---------- Small helpers ---------- */
+function currentGrade() { return GRADES.find(g => g.id === state.gradeId); }
+function currentSubject() { return SUBJECTS.find(s => s.id === state.subjectId); }
+
+function courseNameFor(gradeId, subjectId) {
+  const hs = COURSE_NAMES[gradeId];
+  if (hs && hs[subjectId]) return hs[subjectId];
+  return SUBJECTS.find(s => s.id === subjectId).name;
+}
+
+function isStaarTested(gradeId, subjectId) {
+  return (STAAR_TESTED[subjectId] || []).includes(gradeId);
+}
+
+function hashStr(s) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) { h = (h * 31 + s.charCodeAt(i)) >>> 0; }
+  return h;
+}
+
+/* Seeds a small amount of "already in progress" mock history per grade+
+   subject so the prototype doesn't look empty everywhere -- deterministic,
+   not real saved progress (README: "no progress is saved between visits"). */
+function getCompletedCount(gradeId, subjectId) {
+  const key = gradeId + ":" + subjectId;
+  if (!(key in state.progress)) {
+    const total = CURRICULUM[gradeId][subjectId].length;
+    state.progress[key] = hashStr(key) % Math.min(total, 3);
+  }
+  return state.progress[key];
+}
+
+function markNodeComplete(gradeId, subjectId, nodeIndex) {
+  const key = gradeId + ":" + subjectId;
+  const cur = getCompletedCount(gradeId, subjectId);
+  if (nodeIndex === cur) { state.progress[key] = cur + 1; }
+}
+
+function buildQuestion(band, subjectId, nodeIndex) {
+  const bandIdx = BAND_ORDER.indexOf(band);
+  const variants = QUESTION_BANK[subjectId][bandIdx];
+  return variants[nodeIndex % variants.length];
+}
+
+/* ---------- View switching ---------- */
+function switchView(id) {
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0, 0);
+}
+
+/* ---------- Grade picker ---------- */
+function renderGradePicker() {
+  const grid = document.getElementById("grade-grid");
+  grid.innerHTML = "";
+  GRADES.forEach(g => {
+    const tile = document.createElement("button");
+    tile.type = "button";
+    tile.className = "grade-tile";
+    tile.innerHTML = `<div class="g-label">${g.short}</div><div class="g-name">${g.label}</div>`;
+    tile.addEventListener("click", () => selectGrade(g.id));
+    grid.appendChild(tile);
+  });
+}
+
+function selectGrade(gradeId) {
+  state.gradeId = gradeId;
+  const grade = currentGrade();
+  document.body.setAttribute("data-band", grade.band);
+  const pill = document.getElementById("header-grade-pill");
+  pill.textContent = "🎒 " + grade.label;
+  pill.style.display = "inline-block";
+  document.getElementById("btn-change-grade").style.display = "inline-block";
+  switchView("view-grade-home");
+  renderGradeHome();
+}
+
+/* ---------- Grade home (subject cards) ---------- */
+function renderGradeHome() {
+  const grade = currentGrade();
+  document.getElementById("grade-home-title").textContent = grade.label;
+  document.getElementById("grade-home-mascot-text").innerHTML =
+    `Nice pick! <b>${grade.label}</b> is unlocked. Where do you want to explore today?`;
+
+  const grid = document.getElementById("subject-grid");
+  grid.innerHTML = "";
+  SUBJECTS.forEach(s => {
+    const total = CURRICULUM[grade.id][s.id].length;
+    const completed = getCompletedCount(grade.id, s.id);
+    const pct = Math.round((completed / total) * 100);
+    const courseName = courseNameFor(grade.id, s.id);
+    const tested = isStaarTested(grade.id, s.id);
+
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "subject-card";
+    card.innerHTML = `
+      <div class="s-icon">${s.icon}</div>
+      <div class="s-name">${courseName}</div>
+      <div class="s-desc">${s.desc}${tested ? " <b>· STAAR-tested</b>" : ""}</div>
+      <div class="subject-progress">
+        <div class="bar"><div style="width:${pct}%; background:var(--accent-2);"></div></div>
+        <span class="pct">${pct}%</span>
+      </div>`;
+    card.addEventListener("click", () => selectSubject(s.id));
+    grid.appendChild(card);
+  });
+}
+
+function selectSubject(subjectId) {
+  state.subjectId = subjectId;
+  switchView("view-trail");
+  renderTrail();
+}
+
+/* ---------- Trail (subject skill path) ---------- */
+function renderTrail() {
+  const grade = currentGrade();
+  const subject = currentSubject();
+  const nodes = CURRICULUM[grade.id][subject.id];
+  const courseName = courseNameFor(grade.id, subject.id);
+  const completed = getCompletedCount(grade.id, subject.id);
+
+  document.getElementById("trail-title").textContent = `${courseName} · ${grade.label}`;
+  document.getElementById("trail-mascot-text").innerHTML =
+    `Let's go! Work through these <b>${nodes.length} activities</b> in ${courseName}.`;
+
+  const wrap = document.getElementById("trail-path");
+  wrap.innerHTML = "";
+  nodes.forEach((node, i) => {
+    const status = i < completed ? "done" : (i === completed ? "current" : "locked");
+
+    const rowWrap = document.createElement("div");
+    rowWrap.className = "trail-node-wrap";
+    rowWrap.style.flexDirection = (i % 2 === 1) ? "row-reverse" : "";
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "trail-node " + status;
+    btn.disabled = status === "locked";
+    btn.innerHTML = status === "done"
+      ? `✓<span class="tn-check">⭐</span>`
+      : (status === "current" ? String(i + 1) : "🔒");
+    btn.addEventListener("click", () => { if (status !== "locked") openActivity(i); });
+
+    const info = document.createElement("div");
+    info.className = "trail-node-info";
+    info.innerHTML = `<div class="tn-skill">${node.skill}</div><div class="tn-strand">${node.strand}</div>`;
+
+    rowWrap.appendChild(btn);
+    rowWrap.appendChild(info);
+    wrap.appendChild(rowWrap);
+
+    if (i < nodes.length - 1) {
+      const conn = document.createElement("div");
+      conn.className = "trail-connector";
+      wrap.appendChild(conn);
+    }
+  });
+}
+
+/* ---------- Activity / question screen ---------- */
+function openActivity(nodeIndex) {
+  state.activeNodeIndex = nodeIndex;
+  switchView("view-activity");
+  renderActivity();
+}
+
+function renderActivity() {
+  const grade = currentGrade();
+  const subject = currentSubject();
+  const node = CURRICULUM[grade.id][subject.id][state.activeNodeIndex];
+  const q = buildQuestion(grade.band, subject.id, state.activeNodeIndex);
+
+  document.getElementById("activity-skill-tag").textContent = node.strand;
+  document.getElementById("activity-prompt").textContent = q.prompt;
+
+  const choicesWrap = document.getElementById("activity-choices");
+  choicesWrap.innerHTML = "";
+
+  const feedback = document.getElementById("activity-feedback");
+  feedback.className = "activity-feedback";
+  feedback.textContent = "";
+
+  const continueBtn = document.getElementById("btn-activity-continue");
+  continueBtn.disabled = true;
+
+  q.choices.forEach((choiceText, idx) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "choice-btn";
+    b.textContent = choiceText;
+    b.addEventListener("click", () => {
+      const correct = idx === q.correct;
+      Array.from(choicesWrap.children).forEach((el, i2) => {
+        el.disabled = true;
+        if (i2 === q.correct) el.classList.add("correct");
+      });
+      if (!correct) b.classList.add("incorrect");
+      feedback.textContent = (correct ? "Correct! " : "Not quite. ") + q.explain;
+      feedback.className = "activity-feedback show " + (correct ? "correct" : "incorrect");
+      continueBtn.disabled = false;
+    });
+    choicesWrap.appendChild(b);
+  });
+}
+
+/* ---------- Parent / Teacher view ---------- */
+function renderParentView() {
+  const picker = document.getElementById("parent-grade-picker");
+  if (!picker.dataset.wired) {
+    picker.addEventListener("change", () => renderCoverageFor(picker.value));
+    picker.dataset.wired = "1";
+  }
+  picker.innerHTML = GRADES.map(g => `<option value="${g.id}">${g.label}</option>`).join("");
+  picker.value = state.gradeId || GRADES[0].id;
+  renderCoverageFor(picker.value);
+}
+
+function renderCoverageFor(gradeId) {
+  const table = document.getElementById("coverage-table");
+  table.innerHTML = "";
+  SUBJECTS.forEach(s => {
+    const nodes = CURRICULUM[gradeId][s.id];
+    const completed = getCompletedCount(gradeId, s.id);
+    const courseName = courseNameFor(gradeId, s.id);
+
+    const rows = nodes.map((node, i) => {
+      const done = i < completed;
+      const pct = done ? 100 : (i === completed ? 50 : 0);
+      const color = done ? "var(--good)" : (i === completed ? "var(--accent-3)" : "var(--border)");
+      return `<div class="coverage-row">
+        <div class="cr-skill">${node.strand} — ${node.skill}</div>
+        <div class="cr-bar"><div style="width:${pct}%; background:${color};"></div></div>
+        <div class="cr-pct">${pct}%</div>
+      </div>`;
+    }).join("");
+
+    const section = document.createElement("div");
+    section.className = "coverage-subject";
+    section.innerHTML = `<h3>${s.icon} ${courseName}</h3>${rows}`;
+    table.appendChild(section);
+  });
+}
+
+/* ---------- Wire up static controls ---------- */
+document.getElementById("btn-parent-view").addEventListener("click", () => {
+  switchView("view-parent");
+  renderParentView();
+});
+document.getElementById("btn-change-grade").addEventListener("click", () => switchView("view-picker"));
+document.getElementById("btn-back-to-grade-home").addEventListener("click", () => {
+  switchView("view-grade-home");
+  renderGradeHome();
+});
+document.getElementById("btn-back-to-trail").addEventListener("click", () => {
+  switchView("view-trail");
+  renderTrail();
+});
+document.getElementById("btn-back-from-parent").addEventListener("click", () => {
+  if (state.gradeId) { switchView("view-grade-home"); renderGradeHome(); }
+  else { switchView("view-picker"); }
+});
+document.getElementById("btn-activity-continue").addEventListener("click", () => {
+  const grade = currentGrade();
+  const subject = currentSubject();
+  markNodeComplete(grade.id, subject.id, state.activeNodeIndex);
+  switchView("view-trail");
+  renderTrail();
+});
+
+/* ---------- Boot ---------- */
+renderGradePicker();
+</script>
+</body>
+</html>
